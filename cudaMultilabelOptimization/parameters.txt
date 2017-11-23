@@ -87,7 +87,7 @@ optimizationmethod		zach
 #lambda
 smoothnessweight		125
 
-numsteps				5000
+numsteps				500
 debugoutput				true
 outputeverynsteps		100
 

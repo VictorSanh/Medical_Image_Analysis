@@ -1,0 +1,102 @@
+#### General program parameters
+# IMAGEFILE: can be all image formats handled by cimg, images must be 
+# normalized to the range [0,255]
+#
+# SCRIBBLEFILE: (optional) file containing scribbles in the format 
+# -1: pixels not contained in a scribble
+# 0 - n: pixels contained in regions 0 to n
+# If no scribble file is indicated then the program will run interactively,
+# otherwise the scribbles are read from the indicated file
+#
+# To draw a scribble: draw scribble using the mouse, to assign it to a region label press
+# the number of the region (between 0 and 9) on the keyboard, maximum number of
+# regions supported is 10 (see variable MAXNREGIONS in cudaOptimization.cu)
+#
+# RESULTSFOLDER: folder so save all results to, i.e. the computed data term,
+# the scribble file and the optimization result
+####
+
+
+imagefile		Inputs/pantherMorePreciseScribble.jpg
+scribblefile		Inputs/pantherMorePreciseScribble.cimg
+resultsfolder		Outputs/
+
+
+
+
+#### Parameters for spatially varying color Parzen dataterm 
+# based on paper Nieuwenhuis and Cremers, Spatially Varying Color Models for 
+# Interactive Segmentation, PAMI 2013 (CITE this paper if using the color model 
+# in this code)
+#
+# COLORVARIANCE: variance of Gaussian for color component in Parzen density, 
+# rho in the paper, we normalize images to the range [0,..,255]
+#
+# SCRIBBLEDISTANCEFACTOR: variance of spatial component in the Parzen density is 
+# multiplied by this factor, alpha, in the paper, must be 5 or larger for images 
+# of range [0,..,255] to avoid artefacts due to spatial variances close to 0, set 
+# to 1000 for turning spatial component off and having purely color based 
+# likelihood
+#
+#### Parameters for drawing scribbles
+# BRUSHSIZE: determines the size of brush for drawing scribbles 
+#
+# BRUSHDENSITY: ]0,1] determines the ratio of points in the scribble that are actually 
+# used to compute the data term to save run time and memory, 1 means that all points 
+# are used having a dense scribble, small ratios indicate scribbles of low density 
+####
+
+
+#sigma
+colorvariance				1.3
+#alpha
+scribbledistancefactor		5
+
+brushsize					3
+brushdensity				1
+
+
+
+#### Parameters for optimization methods 
+# The two implemented optimization methods are compared in the paper Nieuwenhuis, 
+# Töppe and Cremers, A Survey and Comparison of Discrete and Continuous Multilabel 
+# Approaches for the Potts Model, IJCV 2013 (CITE this paper together with the 
+# corresponding optimization paper if using the optimization routines in this code)
+#
+# OPTIMIZATIONMETHOD: "zach" or "chambolle"
+# "zach" is based on the paper C. Zach, D. Gallup, J. Frahm and M. Niethammer, 
+# Fast global labeling for realtime stereo using multiple plane sweeps, Vision, 
+# Modeling and Visualization Workshop (VMV), 2008
+# "chambolle" is based on the paper A. Chambolle, D. Cremers, T. Pock, A Convex 
+# Approach to Minimal Partitions, SIAM Journal on Imaging Sciences, 2012
+#
+# SMOOTHNESSWEIGHT: weighting for regularizer for balancing data term and 
+# regularization
+#
+# NUMSTEPS: number of iterations used in the optimization procedure
+#
+# DEBUGOUTPUT: "true" prints debug information on the screen during optimization
+# "false" does not print debug information
+#
+# OUTPUTEVERYNSTEPS: step interval for printing debug information
+####
+
+
+optimizationmethod		zach
+
+#lambda
+smoothnessweight		125
+
+numsteps				5000
+debugoutput				true
+outputeverynsteps		100
+
+
+##############
+# Ground Truth
+##############
+
+
+groundTruth         Inputs/groundTruth.cimg
+
+

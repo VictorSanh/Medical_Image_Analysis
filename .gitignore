@@ -1,0 +1,14 @@
+# Compiled source #
+###################
+*.o
+*.exe
+*.obj
+
+# IDE #
+#######
+*.kdev4
+
+# INPUTS and OUTPUTS FOLDERS #
+##############################
+cudaMultilabelOptimization/Intputs/*
+cudaMultilabelOptimization/Outputs/*

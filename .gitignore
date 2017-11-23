@@ -8,7 +8,6 @@
 #######
 *.kdev4
 
-# INPUTS and OUTPUTS FOLDERS #
-##############################
-cudaMultilabelOptimization/Intputs/*
+# OUTPUTS FOLDERS #
+###################
 cudaMultilabelOptimization/Outputs/*

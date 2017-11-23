@@ -5,11 +5,16 @@
 *.a
 *.exe
 *.obj
-Makefile
+cudaMultilabelOptimization/Makefile
+cudaMultilabelOptimization/cudaMultilabelOptimization
+
+
 
 # IDE #
 #######
 *.kdev4
+
+
 
 # OUTPUTS FOLDERS #
 ###################

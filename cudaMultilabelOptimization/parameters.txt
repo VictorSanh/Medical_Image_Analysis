@@ -17,8 +17,8 @@
 ####
 
 
-imagefile		Inputs/pantherMorePreciseScribble.jpg
-scribblefile		Inputs/pantherMorePreciseScribble.cimg
+imagefile		Inputs/crocodile.jpg
+scribblefile		Inputs/test_croco_d_20_n_50.cimg
 resultsfolder		Outputs/
 
 
@@ -85,7 +85,7 @@ brushdensity				1
 optimizationmethod		zach
 
 #lambda
-smoothnessweight		125
+smoothnessweight		100
 
 numsteps				500
 debugoutput				true

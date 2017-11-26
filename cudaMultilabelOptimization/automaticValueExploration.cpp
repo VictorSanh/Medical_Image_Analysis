@@ -53,11 +53,11 @@ int testValues()
     
     
     
-    for (int sigma=0; sigma<sizeof(colorVarianceList)/sizeof(colorVarianceList[0]); sigma++){
+    for (int sigma=0; sigma<int(sizeof(colorVarianceList)/sizeof(colorVarianceList[0])); sigma++){
       params.colorVariance = colorVarianceList[sigma];
-      for (int alpha=0; alpha<sizeof(scribbleDistanceFactorList)/sizeof(scribbleDistanceFactorList[0]); alpha++){
+      for (int alpha=0; alpha<int(sizeof(scribbleDistanceFactorList)/sizeof(scribbleDistanceFactorList[0])); alpha++){
 	params.scribbleDistanceFactor = scribbleDistanceFactorList[alpha];
-	for (int lambda=0; lambda<sizeof(smoothnessWeightList)/sizeof(smoothnessWeightList[0]); lambda++){
+	for (int lambda=0; lambda<int(sizeof(smoothnessWeightList)/sizeof(smoothnessWeightList[0])); lambda++){
 	    params.smoothnessWeight = smoothnessWeightList[lambda];
 
 	    

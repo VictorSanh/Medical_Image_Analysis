@@ -266,7 +266,7 @@ public:
 
 	    u.assign(img->width(), img->height(), 1, this->nRegions);
 	
-		//compute TV weighting function g(x) to make segmentation boundary align with image edges
+	    //compute TV weighting function g(x) to make segmentation boundary align with image edges
 	    CImg<T> edge(img->width(), img->height(), 1, 1, 1);
 	    CImgList<T> grad(2);
 
@@ -274,26 +274,7 @@ public:
 	    grad[0] /= grad[0].max();
 	    grad[1] /= grad[1].max();
 
-//compute factor for edge indicator function g, can be estimated from image, we found 5 a better value	    
-/*	    float edgeVar = 0;
-	    float n;
-	    cimg_forXY(grad[0], x, y)
-	    {
-		n = 0;
-		cimg_forC(grad[0], c)
-		{
-		    n += grad[0](x, y, 0, c) * grad[0](x, y, 0, c) + grad[1](x, y, 0, c) * grad[1](x, y, 0, c);
-		}
-		edgeVar += n;
-	    }
-	    edgeVar /= img->width() * img->height();
 
-	    edgeVar = 1/(2 * edgeVar);
-
-	    cout << "edgeVar " << edgeVar << endl;
-*/
-
-//compute edge indicator function g(x)
   	   float  edgeVar = 5;
 	   
 	    cimg_forXY(grad[0], x, y)
@@ -470,7 +451,13 @@ public:
 			}
 	    }
 	}
-
+    
+    void displayScribbles(CImg<T> *img, CImg<T> *scribbleMap)
+    {
+	drawScribbles(img, scribbleMap);
+	dispOriginal.assign(scribbleImg);
+    }
+    
     void setColors()
 	{
 

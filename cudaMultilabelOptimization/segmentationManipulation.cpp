@@ -15,17 +15,6 @@
 using namespace std;
 using namespace cimg_library;
 
-/*list<float> unique(CImg<float> image) {
-	// Return a list containing the unique elements of the image
-	list<float> lst_contents;
-	for (int i = 1; i <= image.width(); i++) {
-		for (int j = 1; j <= image.height(); j++) {
-			bool found = (find(lst_contents.begin(), lst_contents.end(), image(i, j)) != lst_contents.end());
-			if (!found) lst_contents.push_back(image(i, j));
-		}
-	}
-	return lst_contents;
-}*/
 
 void display_list(list<float> mylist) {
 	// Display the elements of a liste
@@ -66,12 +55,12 @@ CImg<int> matrix_to_cimg(vector< vector<int> > matrix) {
 	return image;
 }
 
-CImg<int> load_txt_to_cimg(string name_file) {
+CImg<float> load_txt_to_cimg(string name_file) {
+	cout << "Load text file : " <<name_file.c_str() <<endl;
 	vector< vector<int> > data = load_txt(name_file);
-	//const int size_x = data.size();
-	//const int size_y = data[0].size();
-	cout << "vector ok " << data.size() << " " << data[0].size() << endl;
-	CImg<int> image = matrix_to_cimg(data);
+	
+	cout << "Size of text file loaded: " << data.size() << "x" << data[0].size() << endl;
+	CImg<float> image = matrix_to_cimg(data);
 	return transpose(image);
 }
 

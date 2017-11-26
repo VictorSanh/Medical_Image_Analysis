@@ -18,4 +18,9 @@ cudaMultilabelOptimization/cudaMultilabelOptimization
 
 # OUTPUTS FOLDERS #
 ###################
-cudaMultilabelOptimization/Outputs/*
+cudaMultilabelOptimization/Outputs/dataEnergy/*
+cudaMultilabelOptimization/Outputs/scribbleImg/*
+cudaMultilabelOptimization/Outputs/scribbleMap/*
+cudaMultilabelOptimization/Outputs/segmentationImg/*
+cudaMultilabelOptimization/Outputs/segmentationMap/*
+cudaMultilabelOptimization/Outputs/u/*

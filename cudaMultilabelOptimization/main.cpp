@@ -61,7 +61,7 @@
 #include <iostream>
 
 
-int main()
+int computeSegmentation()
 {
     //load parameters from parameter file 'parameters.txt'
     CParams<float> params;
@@ -86,25 +86,25 @@ int main()
     //read scribble file if indicated
     if(params.scribbleFile != "")
     {
-		scribbleMap = new CImg<float>(params.scribbleFile.c_str());
-		cout << params.scribbleFile.c_str() <<endl;
-		if(params.debugOutput) cout << "Loading scribble map" << endl;
+	scribbleMap = new CImg<float>(params.scribbleFile.c_str());
+	cout << params.scribbleFile.c_str() <<endl;
+	if(params.debugOutput) cout << "Loading scribble map" << endl;
 
-		if(scribbleMap->width() != img->width() || scribbleMap->height() != img->height())
-		{
-		    cout << "WARNING: scribble file size does not match image size" << endl;
-		}
+	if(scribbleMap->width() != img->width() || scribbleMap->height() != img->height())
+	{
+	    cout << "WARNING: scribble file size does not match image size" << endl;
+	}
 
-		//read number of regions from scribble file
-		interactive = false;
-		int m = scribbleMap->max();
-		params.nRegions = m + 1;
+	//read number of regions from scribble file
+	interactive = false;
+	int m = scribbleMap->max();
+	params.nRegions = m + 1;
     }
     else
     { 
-		//initialize an empty scribble map with -1
-		interactive = true;
-		scribbleMap = new CImg<float>(img->width(), img->height(), 1, 1, -1);
+	//initialize an empty scribble map with -1
+	interactive = true;
+	scribbleMap = new CImg<float>(img->width(), img->height(), 1, 1, -1);
     }
 
     //execute segmentation algorithm
@@ -120,11 +120,20 @@ int main()
     sprintf(outputParameters, "%0.1f_%0.3f_%i_%0.1f", params.colorVariance, params.smoothnessWeight, edgeVar, params.scribbleDistanceFactor);
     string outputNameWithParameters = outputName + outputParameters;
     
-    if(interactive)
-	{
-		
-		segmentation.executeInteractive(dataterm, scribbleMap, img, params.brushSize, params.smoothnessWeight, params.debugOutput, params.optimizationMethod, params.resultsFolder, outputName, params.numSteps, params.brushDensity, params.outputEveryNSteps);
-	}
+    if(interactive){
+	segmentation.executeInteractive(dataterm, 
+					scribbleMap, 
+					img, 
+					params.brushSize, 
+					params.smoothnessWeight, 
+					params.debugOutput, 
+					params.optimizationMethod, 
+					params.resultsFolder, 
+					outputName, 
+					params.numSteps, 
+					params.brushDensity, 
+					params.outputEveryNSteps);	
+    }
     else //use loaded scribble map
     {	
 	dataterm->readScribblesFromMap(scribbleMap, img);
@@ -132,7 +141,6 @@ int main()
 	segmentation.executeAutomatic(&(dataterm->dataEnergy), 
 				      img, 
 				      params.smoothnessWeight, 
-				      //lambdaToTest[k],
 				      params.debugOutput, 
 				      params.optimizationMethod, 
 				      params.numSteps, 
@@ -145,16 +153,6 @@ int main()
 	//segmentation.segmentation.display();
     }
 
-    
-    /*CImg<float> *estimated = new CImg<float>("Outputs/u/flowers1.3_125.000_5_5.0.cimg");
-    CImg<float> *groundTruth = new CImg<float>("Outputs/u/flowersMorePreciseScribble1.3_125.000_5_5.0.cimg");
-    std::list<float> scores(1+(*groundTruth).max());
-    diceScore((*estimated), (*groundTruth), scores);
-    cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
-    delete estimated;
-    estimated = NULL;
-    delete groundTruth;
-    groundTruth = NULL;*/
     
     //release memory
     if(img)
@@ -175,10 +173,63 @@ int main()
     return 0;
 }
 
-/*int main()
-{
-  testValues();
-  return 0;
-}*/
+int testCImgSize()
+{	
+    CImg<float> segmentation = CImg<float>("Inputs/quatreCouleurSegmentation.cimg");
+    cout <<"segmentation - Height : " << segmentation.height() <<"x" << "Width :" << segmentation.width() <<endl;
+    cout << segmentation(0, 0) << segmentation(239, 0) << segmentation(239, 239) << segmentation(0, 239) <<endl;
+
+    segmentation = CImg<float>("Inputs/quatreCouleurScribble.cimg");
+    cout <<"segmentation - Height : " << segmentation.height() <<"x" << "Width :" << segmentation.width() <<endl;
+    cout << segmentation(0, 0) << segmentation(239, 0) << segmentation(239, 239) << segmentation(0, 239) <<endl;
+    return 0;
+}
+
+int main()
+{  
+    //CImg<float> *groundTruth = NULL;
+    //groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));//CImg<float>("Inputs/rand_scribble1.cimg");
+    
+    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));
+    //CImg<float> *groundTruth = new CImg<float>("Outputs/u/flowers1.3_8.000_5_3.0.cimg");
+    //cout <<"Ground Truth - Height : " <<(*groundTruth).height() <<"x" << "Width :" <<(*groundTruth).width() <<endl;
+    
+    
+    //CImg<float> *estimated = new CImg<float>("Outputs/u/flowers1.3_8.000_5_0.5.cimg");
+    //cout <<"Estimated - Height : " <<(*estimated).height() <<"x" << "Width :" <<(*estimated).width() <<endl;
+    
+    //std::list<float> scores(1+(*groundTruth).max());
+    //diceScore((*estimated), (*groundTruth), scores);
+    //cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+    
+    //delete estimated;
+    //estimated = NULL;
+    //delete groundTruth;
+    //groundTruth = NULL;
+    
+    
+    CImg<float> *img = NULL;
+    //read image and normalize to range [0,255]
+    img = new CImg<float>("Inputs/crocodile.jpg");
+    float imgMax = img->max();
+    *img = *img / imgMax * 255;
+    cout << "Image Loaded - Height: " << img->height() << " Width: " << img->width() <<endl;
+    
+    CImg<float> *scribbleMap = new CImg<float>("Inputs/croco_d_5_n_50.cimg");
+    cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
+    
+    ImageSegmentation<float> segmentation(true);
+    segmentation.displayScribbles(img, scribbleMap);
+    cin.get();
+    
+    
+    
+    delete scribbleMap;
+    delete img;
+    
+    return 0;
+}
+
+
 
 #endif

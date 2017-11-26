@@ -61,7 +61,7 @@
 #include <iostream>
 
 
-int computeSegmentation()
+int computeSegmentationFromParameterFile()
 {
     //load parameters from parameter file 'parameters.txt'
     CParams<float> params;
@@ -173,6 +173,77 @@ int computeSegmentation()
     return 0;
 }
 
+int estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, string outputName)
+{
+    //load parameters from parameter file 'parameters.txt'
+    CParams<float> params;
+    params.readParams("parameters.txt");
+    if(params.debugOutput) cout << "Parameters read" << endl;
+
+    //read image and normalize to range [0,255]
+    img = new CImg<float>(params.imageFile.c_str());
+    float imgMax = img->max();
+    *img = *img / imgMax * 255;
+   
+    //initialize data term
+    if(params.debugOutput) cout << "Creating dataterm" << endl;
+    Dataterm<float> *dataterm = new SpatiallyVaryingParzenDataterm<float>(params.colorVariance, params.scribbleDistanceFactor);
+
+    //initialize segmentation
+    if(params.debugOutput) cout << "Initialize cuda for segmentation" << endl;
+    ImageSegmentation<float> segmentation(params.debugOutput);
+
+    
+    if(scribbleMap->width() != img->width() || scribbleMap->height() != img->height())
+    {
+	cout << "WARNING: scribble file size does not match image size" << endl;
+    }
+
+    //read number of regions from scribble file
+    int m = scribbleMap->max() - scribbleMap->min();
+    params.nRegions = m + 1;
+
+    int  edgeVar = 5;
+    char outputParameters[255];
+    sprintf(outputParameters, "%0.1f_%0.3f_%i_%0.1f", params.colorVariance, params.smoothnessWeight, edgeVar, params.scribbleDistanceFactor);
+    string outputNameWithParameters = outputName + outputParameters;
+    
+    //execute segmentation algorithm 
+    dataterm->readScribblesFromMap(scribbleMap, img);
+    dataterm->computeDataEnergy(img);
+    segmentation.executeAutomatic(&(dataterm->dataEnergy), 
+				  img, 
+				  params.smoothnessWeight, 
+				  params.debugOutput, 
+				  params.optimizationMethod, 
+				  params.numSteps, 
+				  params.outputEveryNSteps);
+    segmentation.drawAndSaveResults(img, 
+				    scribbleMap, 
+				    &dataterm->dataEnergy, 
+				    params.resultsFolder, 
+				    outputNameWithParameters);
+
+    
+    //release memory
+    if(img)
+    {
+	delete img;
+	img = NULL;
+    }
+    if(dataterm) 
+    {
+	delete dataterm;
+	dataterm = NULL;
+    }
+    if(scribbleMap)
+    {
+	delete scribbleMap;
+	scribbleMap = NULL;
+    }
+    return 0;
+}
+
 int testCImgSize()
 {	
     CImg<float> segmentation = CImg<float>("Inputs/quatreCouleurSegmentation.cimg");
@@ -186,28 +257,7 @@ int testCImgSize()
 }
 
 int main()
-{  
-    //CImg<float> *groundTruth = NULL;
-    //groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));//CImg<float>("Inputs/rand_scribble1.cimg");
-    
-    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));
-    //CImg<float> *groundTruth = new CImg<float>("Outputs/u/flowers1.3_8.000_5_3.0.cimg");
-    //cout <<"Ground Truth - Height : " <<(*groundTruth).height() <<"x" << "Width :" <<(*groundTruth).width() <<endl;
-    
-    
-    //CImg<float> *estimated = new CImg<float>("Outputs/u/flowers1.3_8.000_5_0.5.cimg");
-    //cout <<"Estimated - Height : " <<(*estimated).height() <<"x" << "Width :" <<(*estimated).width() <<endl;
-    
-    //std::list<float> scores(1+(*groundTruth).max());
-    //diceScore((*estimated), (*groundTruth), scores);
-    //cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
-    
-    //delete estimated;
-    //estimated = NULL;
-    //delete groundTruth;
-    //groundTruth = NULL;
-    
-    
+{    
     CImg<float> *img = NULL;
     //read image and normalize to range [0,255]
     img = new CImg<float>("Inputs/crocodile.jpg");
@@ -222,10 +272,19 @@ int main()
     segmentation.displayScribbles(img, scribbleMap);
     cin.get();
     
+    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));
+    CImg<float> *groundTruth = new CImg<float>("Inputs/crocodile.cimg");
+    cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
     
     
-    delete scribbleMap;
+    
+    std::list<float> scores(1+(*groundTruth).max());
+    //diceScore((*estimated), (*groundTruth), scores);
+    //cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+    
     delete img;
+    delete scribbleMap;
+    delete groundTruth;
     
     return 0;
 }

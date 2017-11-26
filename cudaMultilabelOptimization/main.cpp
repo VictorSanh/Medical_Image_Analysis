@@ -218,11 +218,10 @@ int estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, string outp
 				  params.optimizationMethod, 
 				  params.numSteps, 
 				  params.outputEveryNSteps);
-    segmentation.drawAndSaveResults(img, 
-				    scribbleMap, 
-				    &dataterm->dataEnergy, 
-				    params.resultsFolder, 
-				    outputNameWithParameters);
+    segmentation.saveResults(img, 
+			     scribbleMap, 
+			     params.resultsFolder, 
+			     outputNameWithParameters);
 
     
     //release memory

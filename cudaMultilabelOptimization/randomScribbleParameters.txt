@@ -1,0 +1,37 @@
+#### General program parameters
+
+
+inputfolder		Intputs/RandomScribble/
+resultsfolder		Outputs/RandomScribble/
+
+
+#### Parameters for spatially varying color Parzen dataterm 
+
+
+#sigma
+colorvariance			1.3
+#alpha
+scribbledistancefactor		5
+brushsize			3
+brushdensity			1
+
+
+#### Parameters for optimization methods 
+
+
+optimizationmethod		zach
+#lambda
+smoothnessweight		100
+numsteps			500
+debugoutput			true
+outputeverynsteps		100
+
+
+##############
+# Ground Truth
+##############
+
+
+groundTruth         Inputs/groundTruth.cimg
+
+

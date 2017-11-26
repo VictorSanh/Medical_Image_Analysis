@@ -409,7 +409,6 @@ public:
 	    
 	    char t[255];
 	    string fileName = resultsFolder + "scribbleMap/";
-	    //sprintf(t, "%sscribbleMap.cimg", fileName.c_str());
 	    sprintf(t, "%s%s.cimg", fileName.c_str(), outputName.c_str());
 	    scribbleMap->save_cimg(t);
 
@@ -456,6 +455,29 @@ public:
     {
 	drawScribbles(img, scribbleMap);
 	dispOriginal.assign(scribbleImg);
+    }
+    
+    void saveResults(CImg<T> *img, CImg<T> *scribbleMap, string resultsFolder, string outputName)
+    {
+	CImg<T> normImg;
+	char t[255];
+	string fileName = resultsFolder + "scribbleMap/";
+	
+	cout <<"Saving " <<outputName.c_str() <<endl;
+
+
+	fileName = resultsFolder + "scribbleImg/";
+	sprintf(t, "%s%s.bmp", fileName.c_str(), outputName.c_str());
+	scribbleImg.save_bmp(t);
+
+	fileName = resultsFolder + "segmentationImg/";
+	sprintf(t, "%s%s.bmp", fileName.c_str(), outputName.c_str());
+	normImg = segmentation.get_normalize(0,255);
+	normImg.save_bmp(t);
+
+	fileName = resultsFolder + "u/";
+	sprintf(t, "%s%s.cimg", fileName.c_str(), outputName.c_str());
+	u.save_cimg(t);
     }
     
     void setColors()

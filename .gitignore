@@ -15,6 +15,10 @@ cudaMultilabelOptimization/cudaMultilabelOptimization
 *.kdev4
 
 
+# INPUTS FOLDERS #
+##################
+cudaMultilabelOptimization/Inputs/RandomScribble/croco/d*.txt
+
 
 # OUTPUTS FOLDERS #
 ###################

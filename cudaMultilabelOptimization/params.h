@@ -164,7 +164,7 @@ class CParams
 
 		s.str(params["scribbledistancefactor"]);
 		s >> scribbleDistanceFactor;
-		if(scribbleDistanceFactor < 5)
+		if(scribbleDistanceFactor < 0.4)
 		{
 			cout << "WARNING: scribbledistancefactor parameter is below 5 which can lead to artefacts, setting to 5" << endl;
 			scribbleDistanceFactor = 5;

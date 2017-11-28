@@ -296,6 +296,7 @@ int randomScribbleAnalysis()
     //Iterate over all the Random Scribble Maps
     int k = 0;
     bool save = false;
+    //string outputName = params.imageFile.substr(0, params.imageFile.size()-4);
     fs::path targetDir((params.intputFolder).c_str()); 
     fs::directory_iterator it(targetDir), eod;    
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   

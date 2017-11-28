@@ -198,17 +198,10 @@ class Image:
             
         for d in distance_list:
             for nb_points in nb_points_list:
-<<<<<<< HEAD
-	        for k in range(K):
-                    self.generate_scribble_at_distance(d, nb_points)
-                    name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '_k_' + str(k) + '.txt'
-	            self.save_scribble_txt(name, delimiter=delimiter)
-=======
             	for k in range(K):
 	                self.generate_scribble_at_distance(d, nb_points)
     	            name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '_' + k + '.txt'
         	        self.save_scribble_txt(name, delimiter=delimiter)
->>>>>>> 5213d74a0da6b493330f259ef7637e9d00d34994
             
 
 def main(argv):            

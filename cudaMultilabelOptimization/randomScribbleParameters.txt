@@ -1,8 +1,9 @@
 #### General program parameters
 
 
-inputfolder		Intputs/RandomScribble/
-resultsfolder		Outputs/RandomScribble/
+imagefile 		Inputs/RandomScribble/croco/croco.jpg
+inputfolder		Inputs/RandomScribble/croco/
+resultsfolder		Outputs/RandomScribble/croco/
 
 
 #### Parameters for spatially varying color Parzen dataterm 
@@ -23,15 +24,6 @@ optimizationmethod		zach
 #lambda
 smoothnessweight		100
 numsteps			500
-debugoutput			true
+debugoutput			false
 outputeverynsteps		100
-
-
-##############
-# Ground Truth
-##############
-
-
-groundTruth         Inputs/groundTruth.cimg
-
 

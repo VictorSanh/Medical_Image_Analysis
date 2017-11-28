@@ -27,7 +27,9 @@ LIBS += -L../ \
     -lgsl \
     -lgslcblas \
     -lm \
-    -lX11
+    -lX11 \
+    -lboost_filesystem \
+    -lboost_system
 
 # #######################################################################
 # CUDA

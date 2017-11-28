@@ -75,6 +75,7 @@ class CParams
     float scribbleDistanceFactor; 
     string optimizationMethod; 
     string resultsFolder;
+    string intputFolder;
     int outputEveryNSteps;
     float brushDensity; 
 
@@ -107,6 +108,7 @@ class CParams
 		file.close();
 
 		resultsFolder = params["resultsfolder"];
+		intputFolder = params["inputfolder"];
 		scribbleFile = params["scribblefile"];
 		imageFile = params["imagefile"];
 

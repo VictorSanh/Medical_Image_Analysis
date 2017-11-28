@@ -459,14 +459,13 @@ public:
     
     void saveResults(CImg<T> *img, CImg<T> *scribbleMap, string resultsFolder, string outputName)
     {
+	drawScribbles(img, scribbleMap);
+	drawSegmentation(img);
+	
 	CImg<T> normImg;
 	char t[255];
-	string fileName = resultsFolder + "scribbleMap/";
 	
-	cout <<"Saving " <<outputName.c_str() <<endl;
-
-
-	fileName = resultsFolder + "scribbleImg/";
+	string fileName = resultsFolder + "scribbleImg/";
 	sprintf(t, "%s%s.bmp", fileName.c_str(), outputName.c_str());
 	scribbleImg.save_bmp(t);
 

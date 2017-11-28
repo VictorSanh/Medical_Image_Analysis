@@ -60,6 +60,9 @@
 #include "params.h"
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
+namespace fs = boost::filesystem; 
 
 int computeSegmentationFromParameterFile()
 {
@@ -173,15 +176,9 @@ int computeSegmentationFromParameterFile()
     return 0;
 }
 
-int estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, string outputName)
+CImg<float> estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, CParams<float> params, string outputName, bool save, bool display)
 {
-    //load parameters from parameter file 'parameters.txt'
-    CParams<float> params;
-    params.readParams("parameters.txt");
-    if(params.debugOutput) cout << "Parameters read" << endl;
-
-    //read image and normalize to range [0,255]
-    img = new CImg<float>(params.imageFile.c_str());
+    //Normalize image to range [0,255]
     float imgMax = img->max();
     *img = *img / imgMax * 255;
    
@@ -218,29 +215,28 @@ int estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, string outp
 				  params.optimizationMethod, 
 				  params.numSteps, 
 				  params.outputEveryNSteps);
-    segmentation.saveResults(img, 
-			     scribbleMap, 
-			     params.resultsFolder, 
-			     outputNameWithParameters);
+    if(save)
+    {	
+	segmentation.saveResults(img,
+				 scribbleMap,
+				 params.resultsFolder, 
+				 outputNameWithParameters);
+    }
+    if(display)
+    {
+	segmentation.displayScribbles(img, scribbleMap);
+	cin.get();
+    }
 
     
     //release memory
-    if(img)
-    {
-	delete img;
-	img = NULL;
-    }
     if(dataterm) 
     {
 	delete dataterm;
 	dataterm = NULL;
     }
-    if(scribbleMap)
-    {
-	delete scribbleMap;
-	scribbleMap = NULL;
-    }
-    return 0;
+    
+    return segmentation.u;
 }
 
 int testCImgSize()
@@ -256,35 +252,68 @@ int testCImgSize()
 }
 
 int main()
-{    
-    CImg<float> *img = NULL;
+{   
+    //Read Parameters
+    CParams<float> params;
+    params.readParams("randomScribbleParameters.txt");
+    cout << "Parameters read" << endl;
+    cout <<params.imageFile.c_str() <<endl;
+    
+    
     //read image and normalize to range [0,255]
-    img = new CImg<float>("Inputs/crocodile.jpg");
+    CImg<float> *img = new CImg<float>(params.imageFile.c_str());
     float imgMax = img->max();
     *img = *img / imgMax * 255;
     cout << "Image Loaded - Height: " << img->height() << " Width: " << img->width() <<endl;
     
-    CImg<float> *scribbleMap = new CImg<float>("Inputs/croco_d_5_n_50.cimg");
-    cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
     
-    ImageSegmentation<float> segmentation(true);
-    segmentation.displayScribbles(img, scribbleMap);
-    cin.get();
-    
-    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg("Inputs/img_croco.txt"));
-    CImg<float> *groundTruth = new CImg<float>("Inputs/crocodile.cimg");
+    //Read ground truth
+    CImg<float> *groundTruth = new CImg<float>((params.intputFolder + "groundTruth.cimg").c_str());
     cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
     
     
+    //Allocate Memory for Scribble Map
+    CImg<float> *scribbleMap = NULL;
     
-    std::list<float> scores(1+(*groundTruth).max());
-    //diceScore((*estimated), (*groundTruth), scores);
-    //cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
     
-    delete img;
-    delete scribbleMap;
-    delete groundTruth;
+    //Iterate over all the Random Scribble Maps
+    fs::path targetDir((params.intputFolder).c_str()); 
+    fs::directory_iterator it(targetDir), eod;    
+    BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
+    { 
+	if(fs::is_regular_file(p))
+	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.imageFile))
+	    {
+	      scribbleMap = new CImg<float>(p.c_str());
+	      cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
+	      
+	      CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, "croco", false, false);
+	      
+	      std::list<float> scores(1+(*groundTruth).max());
+	      diceScore(estimated, (*groundTruth), scores);
+	      cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+	    }
+    }
     
+    
+    if(img)
+    {
+	delete img;
+	img = NULL;
+    }
+    if(scribbleMap) 
+    {
+	delete scribbleMap;
+	scribbleMap = NULL;
+    }
+    if(groundTruth)
+    {
+	delete groundTruth;
+	groundTruth = NULL;
+    }
+    
+    
+
     return 0;
 }
 

@@ -340,7 +340,8 @@ int randomScribbleAnalysis()
 
 int main()
 {
-    int p = computeSegmentationFromParameterFile();
+    //int p = computeSegmentationFromParameterFile();
+    randomScribbleAnalysis();
     return 0;
 }
 

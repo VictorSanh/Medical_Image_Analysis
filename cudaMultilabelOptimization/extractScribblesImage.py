@@ -191,16 +191,17 @@ class Image:
             text_file.write(str_data)
         print("Txt file saved")
     
-    def generate_multi_scribbles_and_save(self, distance_list, nb_points_list, name_file, delimiter='\t '):
+    def generate_multi_scribbles_and_save(self, distance_list, nb_points_list, K, name_file, delimiter='\t '):
         if '.txt' in name_file:
             name_file = name_file[:-4]
         all_files_names = ''
             
         for d in distance_list:
             for nb_points in nb_points_list:
-                self.generate_scribble_at_distance(d, nb_points)
-                name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '.txt'
-                self.save_scribble_txt(name, delimiter=delimiter)
+            	for k in range(K):
+	                self.generate_scribble_at_distance(d, nb_points)
+    	            name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '_' + k + '.txt'
+        	        self.save_scribble_txt(name, delimiter=delimiter)
             
 
 def main(argv):            
@@ -237,7 +238,7 @@ def main(argv):
     #print("Arguments in Main : ", labelsFile, distanceList, nbPointList, svgFileName)
     
     croco = Image(labelsFile, label0 = 0);
-    croco.generate_multi_scribbles_and_save(distanceList, nbPointList, svgFileName)
+    croco.generate_multi_scribbles_and_save(distanceList, nbPointList, 1000, svgFileName)
     print("Finished")
     
             

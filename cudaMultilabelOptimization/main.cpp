@@ -277,6 +277,8 @@ int main()
     
     
     //Iterate over all the Random Scribble Maps
+    int k = 0;
+    bool save = false;
     fs::path targetDir((params.intputFolder).c_str()); 
     fs::directory_iterator it(targetDir), eod;    
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
@@ -284,14 +286,16 @@ int main()
 	if(fs::is_regular_file(p))
 	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.imageFile))
 	    {
-	      scribbleMap = new CImg<float>(p.c_str());
-	      cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
-	      
-	      CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, "croco", false, false);
-	      
-	      std::list<float> scores(1+(*groundTruth).max());
-	      diceScore(estimated, (*groundTruth), scores);
-	      cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+		scribbleMap = new CImg<float>(p.c_str());
+		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
+		
+		save = (k%params.numSteps)==0;
+		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, "croco", save, false);
+		
+		std::list<float> scores(1+(*groundTruth).max());
+		diceScore(estimated, (*groundTruth), scores);
+		cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+		k = k + 1;
 	    }
     }
     

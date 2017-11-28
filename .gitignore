@@ -23,9 +23,22 @@ cudaMultilabelOptimization/Inputs/RandomScribble/croco/d*.txt
 # OUTPUTS FOLDERS #
 ###################
 cudaMultilabelOptimization/Outputs/dataEnergy/*
+!cudaMultilabelOptimization/Outputs/dataEnergy/.gitkeep
+
 cudaMultilabelOptimization/Outputs/scribbleImg/*
+!cudaMultilabelOptimization/Outputs/scribbleImg/.gitkeep
+
 cudaMultilabelOptimization/Outputs/scribbleMap/*
+!cudaMultilabelOptimization/Outputs/scribbleMap/.gitkeep
+
 cudaMultilabelOptimization/Outputs/segmentationImg/*
+!cudaMultilabelOptimization/Outputs/segmentationImg/.gitkeep
+
 cudaMultilabelOptimization/Outputs/segmentationMap/*
+!cudaMultilabelOptimization/Outputs/segmentationMap/.gitkeep
+
 cudaMultilabelOptimization/Outputs/u/*
+!cudaMultilabelOptimization/Outputs/u/.gitkeep
+
 cudaMultilabelOptimization/Outputs/RandomScribble/*
+!cudaMultilabelOptimization/Outputs/RandomScribble/.gitkeep

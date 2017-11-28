@@ -59,6 +59,7 @@
 #include "segmentationManipulation.cpp"
 #include "params.h"
 #include <iostream>
+#include <string> 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,6 +67,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 namespace fs = boost::filesystem; 
+
 
 int computeSegmentationFromParameterFile()
 {
@@ -246,17 +248,6 @@ CImg<float> estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, CPa
     return segmentation.u;
 }
 
-int testCImgSize()
-{	
-    CImg<float> segmentation = CImg<float>("Inputs/quatreCouleurSegmentation.cimg");
-    cout <<"segmentation - Height : " << segmentation.height() <<"x" << "Width :" << segmentation.width() <<endl;
-    cout << segmentation(0, 0) << segmentation(239, 0) << segmentation(239, 239) << segmentation(0, 239) <<endl;
-
-    segmentation = CImg<float>("Inputs/quatreCouleurScribble.cimg");
-    cout <<"segmentation - Height : " << segmentation.height() <<"x" << "Width :" << segmentation.width() <<endl;
-    cout << segmentation(0, 0) << segmentation(239, 0) << segmentation(239, 239) << segmentation(0, 239) <<endl;
-    return 0;
-}
 
 int randomScribbleAnalysis()
 {   
@@ -285,7 +276,7 @@ int randomScribbleAnalysis()
     
     
     //Read ground truth
-    CImg<float> *groundTruth = new CImg<float>((params.intputFolder + "groundTruth.cimg").c_str());
+    CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(params.groundTruthTxt.c_str()));
     cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
     
     
@@ -296,7 +287,11 @@ int randomScribbleAnalysis()
     //Iterate over all the Random Scribble Maps
     int k = 0;
     bool save = false;
-    //string outputName = params.imageFile.substr(0, params.imageFile.size()-4);
+    string name = params.imageFile;
+    name = name.substr(name.find_last_of("/")+1);
+    name = name.substr(0, name.size()-4);
+    ostringstream convert; 
+    
     fs::path targetDir((params.intputFolder).c_str()); 
     fs::directory_iterator it(targetDir), eod;    
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
@@ -308,7 +303,8 @@ int randomScribbleAnalysis()
 		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
 		
 		save = (k%params.numSteps)==0;
-		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, "croco", save, false);
+		convert << k;
+		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name+"_k_"+convert.str()+"_", save, false);
 		
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);

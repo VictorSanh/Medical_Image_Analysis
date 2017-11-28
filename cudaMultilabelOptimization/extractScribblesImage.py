@@ -25,14 +25,14 @@ class Image:
         labels
         contours
         size_x, size_y
-        
+
         distance
         neighbours : all points at a distance <= self.distance from the contours
         set_scribble0 : points having label0 and being at a distance = self.distance from the contours
         set_scribble1
         rand_scribble : matrix with the scribbles generated
     """
-    
+
     def __init__(self, name_file, label0=0, delimiter='\t '):
         self.name_file = name_file
         self.label0 = label0
@@ -42,7 +42,7 @@ class Image:
         self.set_scribble0 = None
         self.set_scribble1 = None
         self.rand_scribble = None
-        
+
         """ Extract a matrix containing the data of the text file
         Each line of the matrix corresponds to a line on the file
         Each element of a line are separated by "delimiter"
@@ -65,9 +65,9 @@ class Image:
         for i in range(len(data)):
             for j in range(len(data[0])):
                 self.labels[i][j] = data[i][j]
-        
+
         self.size_y, self.size_x = np.shape(self.labels)
-    
+
     def show_labels(self):
         plt.matshow(self.labels, origin='upper')
 
@@ -76,10 +76,10 @@ class Image:
             (Working for only two classes)
         """
         self.contours = extract_first_contour(self.labels, levels=levels)
-    
+
     def plot_contours(self, color='black', size=1):
         plt.scatter(self.contours[:,0], self.contours[:, 1], color=color, s=size)
-        
+
     def set_dist_to_a_point(self, x, y, distance):
         """ Return all the points at a certain Manhattan distance from an input point
             If those points are in the boundary initial image
@@ -102,35 +102,35 @@ class Image:
                 i -= 1
             i += 1
         return man_dist
-    
+
     def neighbours_contours(self, distance):
         """ self.neighours : all the points at a Manhattan distance <= parameter "distance" from the contours
         """
-        
+
         neighbours = self.set_dist_to_a_point(self.contours[0][0], self.contours[0][1], distance)
         for i in range(1, len(self.contours)):
             new_neighbours = self.set_dist_to_a_point(self.contours[i][0], self.contours[i][1], distance)
             neighbours = np.concatenate((neighbours, new_neighbours), axis=0)
-        
+
         self.neighbours = np.zeros((self.size_y, self.size_x))
         for point in neighbours:
             self.neighbours[self.size_y - 1 - point[1]][point[0]] = 1
-    
+
     def plot_neighbours(self):
         plt.matshow(self.neighbours)
-    
+
     def points_at_a_distance_from_boundary(self, distance):
         """ self.set_scribble0 contains all the points where
                 d_manhattan(point, contours) == distance and label(point) == label0
             self.set_scribble1 : idem with the other label
         """
-        
+
         if self.contours is None:
             self.extract_contours_labels()
-        
+
         self.distance = distance
         self.neighbours_contours(distance)
-        
+
         ctr = pylab.contour(self.neighbours, levels=[0], origin='image')
         contour_scribble = []
         self.set_scribble0 = []
@@ -151,75 +151,75 @@ class Image:
                     self.set_scribble1 = contour
                 else:
                     self.set_scribble1 = np.concatenate((self.set_scribble1, contour))
-    
+
     def plot_set_scribbles(self):
         plt.scatter(self.set_scribble0[:,0], self.set_scribble0[:,1], s=1)
         plt.scatter(self.set_scribble1[:,0], self.set_scribble1[:,1], s=1)
-    
+
     def generate_scribble_at_distance(self, distance, nb_scribbles):
         if self.contours is None:
             print("Computing contours form labels...")
             self.extract_contours_labels()
-        
+
         self.distance = distance
         print("Computing set of points at the distance {}...".format(self.distance))
         self.points_at_a_distance_from_boundary(self.distance)
-        
+
         print("Extracting scribbles...")
         self.rand_scribble = np.zeros((self.size_y, self.size_x)) - 1
         for i in range(nb_scribbles):
             # Label 0
             n = random.randint(0, len(self.set_scribble0) - 1)
             self.rand_scribble[self.size_y -1 - self.set_scribble0[n, 1], self.set_scribble0[n, 0]] = self.label0
-            
+
             # Label 1
             m = random.randint(0, len(self.set_scribble1) - 1)
             self.rand_scribble[self.size_y -1 - self.set_scribble1[m, 1], self.set_scribble1[m, 0]] = self.label0 + 1
-    
+
     def show_scribbles(self):
         plt.matshow(self.rand_scribble)
         plt.title("Scribbles generated")
-    
+
     def save_scribble_txt(self, name_file, delimiter='\t '):
         str_data = ''
         for i in range(self.size_y):
             for j in range(self.size_x):
                 str_data += str(int(self.rand_scribble[i,j])) + delimiter
             str_data = str_data[:-len(delimiter)] + '\n'
-        
+
         with open(name_file, "w") as text_file:
             text_file.write(str_data)
         print("Txt file saved")
-    
+
     def generate_multi_scribbles_and_save(self, distance_list, nb_points_list, K, name_file, delimiter='\t '):
         if '.txt' in name_file:
             name_file = name_file[:-4]
         all_files_names = ''
-            
+
         for d in distance_list:
             for nb_points in nb_points_list:
-            	for k in range(K):
-	                self.generate_scribble_at_distance(d, nb_points)
-    	            name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '_' + k + '.txt'
-        	        self.save_scribble_txt(name, delimiter=delimiter)
-            
+                for k in range(K):
+                    self.generate_scribble_at_distance(d, nb_points)
+                    name = name_file + 'd_' + str(d) + '_n_' + str(nb_points) + '_' + str(k) + '.txt'
+                    self.save_scribble_txt(name, delimiter=delimiter)
 
-def main(argv):            
+
+def main(argv):
     arg_dict = {}
-    switches = {'labelsFile':str, 
+    switches = {'labelsFile':str,
 		'distanceList':list,
 		'nbPointList':list,
 		'svgFileName':str}
     singles = ''.join([x[0]+':' for x in switches])
     long_form = [x+'=' for x in switches]
     d = {x[0]+':':'--'+x for x in switches}
-    try:            
+    try:
         opts, args = getopt.getopt(argv, singles, long_form)
-    except getopt.GetoptError:          
-        print("bad arg")                       
-        sys.exit(2)       
+    except getopt.GetoptError:
+        print("bad arg")
+        sys.exit(2)
 
-    for opt, arg in opts:        
+    for opt, arg in opts:
         if opt[1]+':' in d: o=d[opt[1]+':'][2:]
         elif opt in d.values(): o=opt[2:]
         else: o = ''
@@ -227,22 +227,21 @@ def main(argv):
         if o and arg:
             arg_dict[o]=ast.literal_eval(arg)
 
-        if not o or not isinstance(arg_dict[o], switches[o]):    
+        if not o or not isinstance(arg_dict[o], switches[o]):
             print(opt, arg, " Error: bad arg")
-            sys.exit(2)                 
+            sys.exit(2)
 
     labelsFile = arg_dict["labelsFile"]
     distanceList = arg_dict["distanceList"]
     nbPointList = arg_dict["nbPointList"]
     svgFileName = arg_dict["svgFileName"]
-    #print("Arguments in Main : ", labelsFile, distanceList, nbPointList, svgFileName)
-    
-    croco = Image(labelsFile, label0 = 0);
-    croco.generate_multi_scribbles_and_save(distanceList, nbPointList, 1000, svgFileName)
+
+    truth = Image(labelsFile, label0 = 0);
+    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 5, svgFileName)
     print("Finished")
-    
-            
+
+
 if __name__ == '__main__':
     #4 arguments : "labels_croco.txt" liste_des_distances, liste_des_nb_de_points, nom_fichier_svg
-    print("You are in the Python Script")
-    main(sys.argv[1:]) 
+    #print("You are in the Python Script")
+    main(sys.argv[1:])

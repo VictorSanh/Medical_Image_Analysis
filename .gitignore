@@ -24,3 +24,4 @@ cudaMultilabelOptimization/Outputs/scribbleMap/*
 cudaMultilabelOptimization/Outputs/segmentationImg/*
 cudaMultilabelOptimization/Outputs/segmentationMap/*
 cudaMultilabelOptimization/Outputs/u/*
+cudaMultilabelOptimization/Outputs/RandomScribble/*

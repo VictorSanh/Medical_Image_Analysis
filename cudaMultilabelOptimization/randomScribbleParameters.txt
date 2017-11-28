@@ -4,6 +4,7 @@
 imagefile 		Inputs/RandomScribble/croco/croco.jpg
 inputfolder		Inputs/RandomScribble/croco/
 resultsfolder		Outputs/RandomScribble/croco/
+groundTruthTxt		Inputs/RandomScribble/croco/groundTruth.txt
 
 
 #### Parameters for spatially varying color Parzen dataterm 

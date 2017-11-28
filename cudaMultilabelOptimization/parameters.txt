@@ -17,8 +17,8 @@
 ####
 
 
-imagefile		Inputs/crocodile.jpg
-scribblefile		Inputs/test_croco_d_20_n_50.cimg
+imagefile		Inputs/flowers.jpg
+scribblefile		Inputs/flowers.cimg
 resultsfolder		Outputs/
 
 
@@ -50,7 +50,7 @@ resultsfolder		Outputs/
 #sigma
 colorvariance				1.3
 #alpha
-scribbledistancefactor		5
+scribbledistancefactor		2
 
 brushsize					3
 brushdensity				1
@@ -85,7 +85,7 @@ brushdensity				1
 optimizationmethod		zach
 
 #lambda
-smoothnessweight		100
+smoothnessweight		1
 
 numsteps				500
 debugoutput				true

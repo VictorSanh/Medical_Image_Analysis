@@ -60,6 +60,9 @@
 #include "params.h"
 #include <iostream>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 namespace fs = boost::filesystem; 
@@ -89,8 +92,12 @@ int computeSegmentationFromParameterFile()
     //read scribble file if indicated
     if(params.scribbleFile != "")
     {
-	scribbleMap = new CImg<float>(params.scribbleFile.c_str());
-	cout << params.scribbleFile.c_str() <<endl;
+	if (params.scribbleFile.find(".txt") != std::string::npos)
+	    scribbleMap = new CImg<float>(load_txt_to_cimg(params.scribbleFile.c_str()));
+	else
+	    scribbleMap = new CImg<float>(params.scribbleFile.c_str());
+	
+	
 	if(params.debugOutput) cout << "Loading scribble map" << endl;
 
 	if(scribbleMap->width() != img->width() || scribbleMap->height() != img->height())
@@ -153,7 +160,7 @@ int computeSegmentationFromParameterFile()
 					&dataterm->dataEnergy, 
 					params.resultsFolder, 
 					outputNameWithParameters);
-	//segmentation.segmentation.display();
+	segmentation.segmentation.display();
     }
 
     
@@ -251,13 +258,23 @@ int testCImgSize()
     return 0;
 }
 
-int main()
+int randomScribbleAnalysis()
 {   
     //Read Parameters
     CParams<float> params;
     params.readParams("randomScribbleParameters.txt");
     cout << "Parameters read" << endl;
-    cout <<params.imageFile.c_str() <<endl;
+    cout <<"Image File : " <<params.imageFile.c_str() <<endl;
+    cout <<"Ground Truth Txt : " <<params.groundTruthTxt.c_str() <<endl;
+    
+    
+    //Computing and writing Random Scribbles
+    cout << "Starting Bash Script" <<endl;
+    string labelsFile = params.groundTruthTxt;
+    string svgFileName = params.intputFolder;
+    string call = "./randomScribbleGeneration " + labelsFile + " " + svgFileName;
+    system(call.c_str());
+    cout << "Quitting Bash Script" <<endl;
     
     
     //read image and normalize to range [0,255]
@@ -284,9 +301,9 @@ int main()
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
     { 
 	if(fs::is_regular_file(p))
-	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.imageFile))
+	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.intputFolder + "groundTruth.txt") && p.c_str()!= (params.imageFile))
 	    {
-		scribbleMap = new CImg<float>(p.c_str());
+		scribbleMap = new CImg<float>(load_txt_to_cimg(p.c_str()));
 		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
 		
 		save = (k%params.numSteps)==0;
@@ -316,11 +333,15 @@ int main()
 	groundTruth = NULL;
     }
     
-    
 
     return 0;
 }
 
 
+int main()
+{
+    int p = computeSegmentationFromParameterFile();
+    return 0;
+}
 
 #endif

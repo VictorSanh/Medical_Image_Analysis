@@ -76,6 +76,7 @@ class CParams
     string optimizationMethod; 
     string resultsFolder;
     string intputFolder;
+    string groundTruthTxt;
     int outputEveryNSteps;
     float brushDensity; 
 
@@ -111,6 +112,7 @@ class CParams
 		intputFolder = params["inputfolder"];
 		scribbleFile = params["scribblefile"];
 		imageFile = params["imagefile"];
+		groundTruthTxt = params["groundTruthTxt"];
 
 		if(params["debugoutput"] == "true") debugOutput = true;
 		else debugOutput = false;

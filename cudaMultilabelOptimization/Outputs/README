@@ -1,0 +1,13 @@
+Output Folder Strucutre
+
+- dataEnergy
+- scribbleImg
+- scribbleMap
+- segmentationImg
+- segmentationMap
+- u
+- RandomScribble
+	- Input
+		- scribbleImg
+		- segmentationImg
+		- u

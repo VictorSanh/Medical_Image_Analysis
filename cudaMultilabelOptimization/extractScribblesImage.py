@@ -4,6 +4,44 @@ import matplotlib.pyplot as plt
 import pylab  # To extract the contours
 import random
 import sys, ast, getopt, types
+import scipy.io
+
+# --------------------------------------------------
+# -- Data from the Berkeley dataset that contains --
+# --  two labels that seems correct (visually..)  --
+# --------------------------------------------------
+mat_segmentation = {
+    'val':{
+        1: {'file': '130026.mat', 'segmentation': 1, 'description': "Croco"},
+        2: {'file': '196073.mat', 'segmentation': 4, 'description': "Serpent"},
+        3: {'file': '87046.mat', 'segmentation': 3, 'description': "Lezrad"}
+    },
+    'train':{
+        1: {'file': '135037.mat', 'segmentation': 1, 'description': "Aigle"},
+        2: {'file': '130034.mat', 'segmentation': 5, 'description': "Croco(herbe)"},
+        3: {'file': '100098.mat', 'segmentation': 4, 'description': "Ours(mauvais)"}
+    },
+    'test':{
+        1: {'file': '8068.mat', 'segmentation': 2, 'description': "Cygne(pasouf)"},
+        2: {'file': '43051.mat', 'segmentation': 4, 'description': "Canard"},
+        3: {'file': '3063.mat', 'segmentation': 3, 'description': "Avion(pasouf)"},
+        4: {'file': '253092.mat', 'segmentation': 2, 'description': "Girafe"},
+        5: {'file': '109055.mat', 'segmentation': 1, 'description': "Loup"},
+        6: {'file': '108069.mat', 'segmentation': 1, 'description': "Tigre"},
+        7: {'file': '69022.mat', 'segmentation': 4, 'description': "Kangourou"},
+        8: {'file': '70011.mat', 'segmentation': 3, 'description': "Aigle(pasouf)"}
+    }
+}
+# --------------------------------------------------
+# --------------------------------------------------
+
+def load_labels_from_Berkeley_dataset(name_file, segmentation_num):
+    """ name_file = "13006.mat" for instance
+        segmentation_num = number of the segmentation which contain only two labels
+    """
+    data = scipy.io.loadmat(name_file)
+    return data['groundTruth'][0][segmentation_num - 1]['Segmentation'][0][0]
+
 
 def extract_first_contour(data, levels=[0]):
     """ Extract the contours of a labelised image
@@ -33,7 +71,7 @@ class Image:
         rand_scribble : matrix with the scribbles generated
     """
 
-    def __init__(self, name_file, label0=0, delimiter='\t '):
+    def __init__(self, name_file, label0=0, segmentation_num=1, delimiter='\t '):
         self.name_file = name_file
         self.label0 = label0
         self.contours = None
@@ -43,28 +81,35 @@ class Image:
         self.set_scribble1 = None
         self.rand_scribble = None
 
-        """ Extract a matrix containing the data of the text file
-        Each line of the matrix corresponds to a line on the file
-        Each element of a line are separated by "delimiter"
-        """
-        with open(self.name_file, "r") as f :
-            fichier_entier = f.read()
-            lines = fichier_entier.split("\n")
+        if name.split('.')[1] == 'txt':
+            """ Extract a matrix containing the data of the text file
+            Each line of the matrix corresponds to a line on the file
+            Each element of a line are separated by "delimiter"
+            """
+            with open(self.name_file, "r") as f :
+                fichier_entier = f.read()
+                lines = fichier_entier.split("\n")
 
-        # Separate the lines in integer values
-        not_allowed_elem = ['', ' ']  # Elements to remove
+            # Separate the lines in integer values
+            not_allowed_elem = ['', ' ']  # Elements to remove
 
-        data = [line.split(delimiter) for line in lines]
-        for i in range(len(data)):
-            data[i] = [int(elem) for elem in data[i] if elem not in not_allowed_elem]
+            data = [line.split(delimiter) for line in lines]
+            for i in range(len(data)):
+                data[i] = [int(elem) for elem in data[i] if elem not in not_allowed_elem]
 
-        if [] in data: data.remove([])  # There is sometimes a blank line at the end
+            if [] in data: data.remove([])  # There is sometimes a blank line at the end
 
-        # Reshape the data
-        self.labels = np.zeros((len(data), len(data[0])))
-        for i in range(len(data)):
-            for j in range(len(data[0])):
-                self.labels[i][j] = data[i][j]
+            # Reshape the data
+            self.labels = np.zeros((len(data), len(data[0])))
+            for i in range(len(data)):
+                for j in range(len(data[0])):
+                    self.labels[i][j] = data[i][j]
+
+        elif name.split('.')[1] == 'mat':
+            self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
+
+        else:
+            print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
 
         self.size_y, self.size_x = np.shape(self.labels)
 
@@ -207,9 +252,9 @@ class Image:
 def main(argv):
     arg_dict = {}
     switches = {'labelsFile':str,
-		'distanceList':list,
-		'nbPointList':list,
-		'svgFileName':str}
+        'distanceList':list,
+        'nbPointList':list,
+        'svgFileName':str}
     singles = ''.join([x[0]+':' for x in switches])
     long_form = [x+'=' for x in switches]
     d = {x[0]+':':'--'+x for x in switches}

@@ -162,7 +162,7 @@ class Image:
             self.extract_contours_labels()
 
         self.distance = distance
-        print("Computing set of points at the distance {}...".format(self.distance))
+        print("Computing {} points at the distance {}...".format(nb_scribbles, self.distance))
         self.points_at_a_distance_from_boundary(self.distance)
 
         print("Extracting scribbles...")
@@ -237,7 +237,7 @@ def main(argv):
     svgFileName = arg_dict["svgFileName"]
 
     truth = Image(labelsFile, label0 = 0);
-    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 5, svgFileName)
+    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 1, svgFileName)
     print("Finished")
 
 

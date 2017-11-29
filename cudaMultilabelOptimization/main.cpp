@@ -276,7 +276,8 @@ int randomScribbleAnalysis()
     
     
     //Read ground truth
-    CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(params.groundTruthTxt.c_str()));
+    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(params.groundTruthTxt.c_str()));
+    CImg<float> *groundTruth = new CImg<float>("Inputs/RandomScribble/croco/groundTruth.cimg");
     cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
     
     

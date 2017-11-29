@@ -111,6 +111,12 @@ class Image:
         else:
             print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
 
+        # Retreat the values of the labels
+        if (np.unique(self.labels) == [1, 2]).all() and self.label0 == 0:
+            self.labels -= 1
+        elif (np.unique(self.labels) == [0, 1]).all() and self.label0 == 1:
+            self.labels += 1
+
         self.size_y, self.size_x = np.shape(self.labels)
 
     def show_labels(self):

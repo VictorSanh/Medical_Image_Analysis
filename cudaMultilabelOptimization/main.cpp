@@ -296,8 +296,7 @@ int randomScribbleAnalysis()
     string name = params.imageFile;
     name = name.substr(name.find_last_of("/")+1);
     name = name.substr(0, name.size()-4);
-    ostringstream convert; 
-    
+ 
     fs::path targetDir((params.intputFolder).c_str()); 
     fs::directory_iterator it(targetDir), eod;    
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
@@ -307,10 +306,13 @@ int randomScribbleAnalysis()
 	    {
 		scribbleMap = new CImg<float>(load_txt_to_cimg(p.c_str()));
 		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
-
-		save = (k%params.numSteps)==0;
-		convert << k;
-		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name+"_k_"+convert.str()+"_", save, false);
+		
+		string id = p.c_str();
+		id = id.substr(id.find_last_of("/")+1);
+		id = id.substr(0, id.size()-4);
+		
+		save = (k%params.outputEveryNSteps)==0;
+		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name + "_" + id + "_", save, false);
 		
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);

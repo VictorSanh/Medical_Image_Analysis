@@ -57,6 +57,14 @@ def extract_first_contour(data, levels=[0]):
     # Have contour in a pixel and not between two pixels
     return np.array([np.array(list(map(int, coord))) for coord in contour])
 
+def change_0_1(x):
+    if x == 0:
+        return 1
+    elif x == 1:
+        return 0
+    else:
+        print("PROBLEM: This number {} should be 0 or 1".format(x))
+
 
 class Image:
     """ name_file
@@ -119,9 +127,15 @@ class Image:
 
         if name_file.split('.')[-1] == 'mat':
             str_data = ''
+            change = False
+            if self.labels[0, 0] == 0:
+                change = True
             for i in range(self.labels.shape[0]):
                 for j in range(self.labels.shape[1]):
-                    str_data += str(int(self.labels[i,j])) + delimiter
+                    if change:
+                        str_data += str(int(change_0_1(self.labels[i,j]))) + delimiter
+                    else:
+                        str_data += str(int(self.labels[i,j])) + delimiter
                 str_data = str_data[:-len(delimiter)] + '\n'
 
             with open(name_file[:-4] + ".txt", "w") as text_file:

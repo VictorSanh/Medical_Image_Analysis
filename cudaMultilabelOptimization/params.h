@@ -78,7 +78,7 @@ class CParams
     string intputFolder;
     string groundTruthTxt;
     int outputEveryNSteps;
-    float brushDensity; 
+    float brushDensity;
 
     map<string, string> params;
     

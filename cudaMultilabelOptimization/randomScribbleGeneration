@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 extractScribblesImage.py --labelsFile="'"$1"'" --distanceList='[30]' --nbPointList='[6000]' --svgFileName="'"$2"'"
+python3 extractScribblesImage.py --labelsFile="'"$1"'" --distanceList='[30]' --nbPointList='[4000, 5000, 6000]' --svgFileName="'"$2"'"

@@ -115,7 +115,7 @@ class Image:
 
         elif name_file.split('.')[-1] == 'mat':
             self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
-            
+
         else:
             print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
 
@@ -314,8 +314,8 @@ def main(argv):
     nbPointList = arg_dict["nbPointList"]
     svgFileName = arg_dict["svgFileName"]
 
-    truth = Image(labelsFile, segmentation_num=2);
-    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 1, svgFileName)
+    truth = Image(labelsFile, segmentation_num = 2);
+    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 5, svgFileName)
     print("Finished")
 
 

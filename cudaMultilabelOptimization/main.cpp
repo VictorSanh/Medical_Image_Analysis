@@ -59,6 +59,7 @@
 #include "segmentationManipulation.cpp"
 #include "params.h"
 #include <iostream>
+#include <fstream>
 #include <string> 
 
 #include <stdio.h>
@@ -66,7 +67,8 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
-namespace fs = boost::filesystem; 
+namespace bfs = boost::filesystem; 
+
 
 
 int computeSegmentationFromParameterFile()
@@ -249,7 +251,7 @@ CImg<float> estimateSegmentation(CImg<float> *scribbleMap, CImg<float> *img, CPa
 }
 
 
-int randomScribbleAnalysis()
+int randomScribbleAnalysis(bool randomScribbleGeneration)
 {   
     //Read Parameters
     CParams<float> params;
@@ -266,7 +268,8 @@ int randomScribbleAnalysis()
     string labelsFile = params.groundTruthTxt;
     string svgFileName = params.intputFolder;
     string call = "./randomScribbleGeneration " + labelsFile + " " + svgFileName;
-    system(call.c_str());
+    if (randomScribbleGeneration)
+	system(call.c_str());
     cout << "Quitting Bash Script" <<endl <<endl <<endl;
     
     
@@ -278,15 +281,8 @@ int randomScribbleAnalysis()
     
     
     //Read ground truth
-    //CImg<float> *groundTruth = new CImg<float>("Inputs/RandomScribble/croco/groundTruth.cimg");
-    //cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
-    
-    //Strange Things    
     string groundTruthFileName = params.intputFolder + "groundTruth.txt";
-    //CImg<int> image = load_txt_to_cimg(groundTruthFileName.c_str());
-    //image.save((params.intputFolder + "groundTruth.cimg").c_str());
     CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(groundTruthFileName.c_str()));
-    //CImg<float> *groundTruth = new CImg<float>((params.intputFolder + "groundTruth.cimg").c_str());
     cout << "Ground Truth Txt Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl <<endl <<endl;
     
     
@@ -297,15 +293,23 @@ int randomScribbleAnalysis()
     //Iterate over all the Random Scribble Maps
     int k = 0;
     bool save = false;
+    float avg = 0;
     string name = params.imageFile;
     name = name.substr(name.find_last_of("/")+1);
     name = name.substr(0, name.size()-4);
- 
-    fs::path targetDir((params.intputFolder).c_str()); 
-    fs::directory_iterator it(targetDir), eod;    
-    BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
+    
+    
+    string csvFileName = params.resultsFolder + "diceScores.csv";
+    ofstream csvDump;
+    csvDump.open(csvFileName.c_str());
+    csvDump <<"ScribbleId" <<"," <<"AveraDiceScore" <<endl;
+    
+    
+    bfs::path targetDir((params.intputFolder).c_str()); 
+    bfs::directory_iterator it(targetDir), eod;    
+    BOOST_FOREACH(bfs::path const &p, std::make_pair(it, eod))   
     { 
-	if(fs::is_regular_file(p))
+	if(bfs::is_regular_file(p))
 	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.intputFolder + "groundTruth.txt") && p.c_str()!= (params.imageFile) && p.c_str() != params.groundTruthTxt)
 	    {
 		scribbleMap = new CImg<float>(load_txt_to_cimg(p.c_str()));
@@ -316,18 +320,21 @@ int randomScribbleAnalysis()
 		id = id.substr(0, id.size()-4);
 		
 		save = (k%params.outputEveryNSteps)==0;
-		CImg<float> estimated = estimateSegmentation(groundTruth, img, params, name + "_" + id + "_", save, false);
+		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name + "_" + id + "_", save, false);
 		
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);
-		cout << "Dice Scores Details : "  <<endl;   
+		/*cout << "Dice Scores Details : "  <<endl;   
 		for (list<float>::const_iterator it = scores.begin(); it != scores.end(); ++it)
-		    std::cout << *it << "\n";
-		cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
+		    std::cout << *it << "\n";*/
+		avg = averageDiceScore(scores);
+		cout << "Average Dice Score: " << avg <<endl;
 		k = k + 1;
+		
+		csvDump <<(params, name + "_" + id) <<"," <<avg <<endl;
 	    }
     }
-    
+    csvDump.close();
     
     if(img)
     {
@@ -353,14 +360,25 @@ int randomScribbleAnalysis()
 int main()
 {
     //int p = computeSegmentationFromParameterFile();
-    //randomScribbleAnalysis();
+    randomScribbleAnalysis(true);
     //computeSegmentationFromParameterFile();
-    CImg<float> seg = CImg<float>("flowersU.cimg");
-    cout <<seg(0,0) <<endl;
-    cout <<seg(200,200) <<endl;
-    CImg<float> scr = CImg<float>("flowers.cimg");
-    cout <<scr(0,0) <<endl;
-    cout <<scr(200,200) <<endl;
+    /*CImg<float> u1 = CImg<float>("flowersU1.cimg");
+    cout << "u1 Min : " <<u1.min() << " - u1 Max : " <<u1.max() <<endl;
+    cout <<"u1 : " <<u1(0,0) <<endl;
+    cout <<"u1 : " <<u1(200,250) <<endl;
+    CImg<float> s1 = CImg<float>("flowersS1.cimg");
+    cout << "s1 Min : " <<s1.min() << " - s1 Max : " <<s1.max() <<endl;
+    cout <<"s1 : " <<s1(0,0) <<endl;
+    cout <<"s1 : " <<s1(200,250) <<endl;
+    
+    CImg<float> u2 = CImg<float>("flowersU2.cimg");
+    cout << "u2 Min : " <<u2.min() << " - u2 Max : " <<u2.max() <<endl;
+    cout <<"u2 : " <<u2(0,0) <<endl;
+    cout <<"u2 : " <<u2(200,250) <<endl;
+    CImg<float> s2 = CImg<float>("flowersS2.cimg");
+    cout << "s2 Min : " <<s2.min() << " - s2 Max : " <<s2.max() <<endl;
+    cout <<"s2 : " <<s2(0,0) <<endl;
+    cout <<"s2 : " <<s2(200,250) <<endl;*/
     return 0;
 }
 

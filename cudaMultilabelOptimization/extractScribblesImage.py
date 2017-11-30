@@ -315,7 +315,7 @@ def main(argv):
     svgFileName = arg_dict["svgFileName"]
 
     truth = Image(labelsFile, segmentation_num = 2);
-    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 5, svgFileName)
+    truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 10, svgFileName)
     print("Finished")
 
 

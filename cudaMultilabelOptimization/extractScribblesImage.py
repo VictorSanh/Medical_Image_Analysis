@@ -107,8 +107,7 @@ class Image:
 
         elif name_file.split('.')[-1] == 'mat':
             self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
-
-
+            
         else:
             print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
 
@@ -131,6 +130,7 @@ class Image:
             print("Txt file From Mat saved\n")
 
         self.size_y, self.size_x = np.shape(self.labels)
+
 
     def show_labels(self):
         plt.matshow(self.labels, origin='upper')

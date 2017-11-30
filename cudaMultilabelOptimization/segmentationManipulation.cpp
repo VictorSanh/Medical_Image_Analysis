@@ -69,5 +69,4 @@ CImg<int> load_txt_to_cimg(string name_file) {
 }
 
 
-
 #endif

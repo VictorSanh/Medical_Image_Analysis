@@ -107,6 +107,18 @@ class Image:
 
         elif name_file.split('.')[1] == 'mat':
             self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
+
+
+        else:
+            print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
+
+        # Retreat the values of the labels
+        if (np.unique(self.labels) == [1, 2]).all() and self.label0 == 0:
+            self.labels -= 1
+        elif (np.unique(self.labels) == [0, 1]).all() and self.label0 == 1:
+            self.labels += 1
+
+        if name_file.split('.')[1] == 'mat':
             str_data = ''
             for i in range(self.labels.shape[1]):
                 for j in range(self.labels.shape[0]):
@@ -117,15 +129,6 @@ class Image:
                 text_file.write(str_data)
 
             print("Txt file From Mat saved\n")
-
-        else:
-            print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
-
-        # Retreat the values of the labels
-        if (np.unique(self.labels) == [1, 2]).all() and self.label0 == 0:
-            self.labels -= 1
-        elif (np.unique(self.labels) == [0, 1]).all() and self.label0 == 1:
-            self.labels += 1
 
         self.size_y, self.size_x = np.shape(self.labels)
 

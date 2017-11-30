@@ -307,13 +307,16 @@ int randomScribbleAnalysis()
 	    {
 		scribbleMap = new CImg<float>(load_txt_to_cimg(p.c_str()));
 		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;
-		
+
 		save = (k%params.numSteps)==0;
 		convert << k;
 		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name+"_k_"+convert.str()+"_", save, false);
 		
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);
+		cout << "Dice Scores Details : "  <<endl;   
+		for (list<float>::const_iterator it = scores.begin(); it != scores.end(); ++it)
+		    std::cout << *it << "\n";
 		cout << "Average Dice Score: " << averageDiceScore(scores) <<endl;
 		k = k + 1;
 	    }

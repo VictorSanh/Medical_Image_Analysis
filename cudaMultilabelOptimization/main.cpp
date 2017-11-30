@@ -362,23 +362,6 @@ int main()
     //int p = computeSegmentationFromParameterFile();
     randomScribbleAnalysis(true);
     //computeSegmentationFromParameterFile();
-    /*CImg<float> u1 = CImg<float>("flowersU1.cimg");
-    cout << "u1 Min : " <<u1.min() << " - u1 Max : " <<u1.max() <<endl;
-    cout <<"u1 : " <<u1(0,0) <<endl;
-    cout <<"u1 : " <<u1(200,250) <<endl;
-    CImg<float> s1 = CImg<float>("flowersS1.cimg");
-    cout << "s1 Min : " <<s1.min() << " - s1 Max : " <<s1.max() <<endl;
-    cout <<"s1 : " <<s1(0,0) <<endl;
-    cout <<"s1 : " <<s1(200,250) <<endl;
-    
-    CImg<float> u2 = CImg<float>("flowersU2.cimg");
-    cout << "u2 Min : " <<u2.min() << " - u2 Max : " <<u2.max() <<endl;
-    cout <<"u2 : " <<u2(0,0) <<endl;
-    cout <<"u2 : " <<u2(200,250) <<endl;
-    CImg<float> s2 = CImg<float>("flowersS2.cimg");
-    cout << "s2 Min : " <<s2.min() << " - s2 Max : " <<s2.max() <<endl;
-    cout <<"s2 : " <<s2(0,0) <<endl;
-    cout <<"s2 : " <<s2(200,250) <<endl;*/
     return 0;
 }
 

@@ -256,7 +256,9 @@ int randomScribbleAnalysis()
     params.readParams("randomScribbleParameters.txt");
     cout << "Parameters read" << endl;
     cout <<"Image File : " <<params.imageFile.c_str() <<endl;
-    cout <<"Ground Truth Txt : " <<params.groundTruthTxt.c_str() <<endl;
+    cout <<"Input Folder : " <<params.intputFolder.c_str() <<endl;
+    cout <<"OutputFolder : " <<params.resultsFolder.c_str() <<endl;
+    cout <<"Ground Truth Txt : " <<params.groundTruthTxt.c_str() <<endl <<endl <<endl;
     
     
     //Computing and writing Random Scribbles
@@ -265,7 +267,7 @@ int randomScribbleAnalysis()
     string svgFileName = params.intputFolder;
     string call = "./randomScribbleGeneration " + labelsFile + " " + svgFileName;
     system(call.c_str());
-    cout << "Quitting Bash Script" <<endl;
+    cout << "Quitting Bash Script" <<endl <<endl <<endl;
     
     
     //read image and normalize to range [0,255]
@@ -276,9 +278,12 @@ int randomScribbleAnalysis()
     
     
     //Read ground truth
-    //CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(params.groundTruthTxt.c_str()));
-    CImg<float> *groundTruth = new CImg<float>("Inputs/RandomScribble/croco/groundTruth.cimg");
-    cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
+    //CImg<float> *groundTruth = new CImg<float>("Inputs/RandomScribble/croco/groundTruth.cimg");
+    //cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
+    
+    string groundTruthFileName = params.intputFolder + "groundTruth.txt";
+    CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(groundTruthFileName.c_str()));
+    cout << "Ground Truth Txt Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl <<endl <<endl;
     
     
     //Allocate Memory for Scribble Map
@@ -298,7 +303,7 @@ int randomScribbleAnalysis()
     BOOST_FOREACH(fs::path const &p, std::make_pair(it, eod))   
     { 
 	if(fs::is_regular_file(p))
-	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.intputFolder + "groundTruth.txt") && p.c_str()!= (params.imageFile))
+	    if (p.c_str()!= (params.intputFolder + "groundTruth.cimg") && p.c_str()!= (params.intputFolder + "groundTruth.txt") && p.c_str()!= (params.imageFile) && p.c_str() != params.groundTruthTxt)
 	    {
 		scribbleMap = new CImg<float>(load_txt_to_cimg(p.c_str()));
 		cout << "Scribble Map Loaded - Height: " << scribbleMap->height() << " Width: " << scribbleMap->width() <<endl;

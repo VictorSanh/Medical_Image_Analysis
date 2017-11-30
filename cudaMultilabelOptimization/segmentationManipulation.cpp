@@ -63,7 +63,7 @@ CImg<int> matrix_to_cimg(const vector< vector<int> > &matrix) {
 
 CImg<int> load_txt_to_cimg(string name_file) {
     vector< vector<int> > data = load_txt(name_file.c_str());
-    cout << "Load Txt File into CImg. Size : " << data.size() << " " << data[0].size() << endl;
+    //cout << "Load Txt File into CImg. Size : " << data.size() << " " << data[0].size() << endl;
     CImg<int> image = matrix_to_cimg(data);
     return image;
 }

@@ -81,7 +81,7 @@ class Image:
         self.set_scribble1 = None
         self.rand_scribble = None
 
-        if name.split('.')[1] == 'txt':
+        if name_file.split('.')[1] == 'txt':
             """ Extract a matrix containing the data of the text file
             Each line of the matrix corresponds to a line on the file
             Each element of a line are separated by "delimiter"
@@ -105,8 +105,18 @@ class Image:
                 for j in range(len(data[0])):
                     self.labels[i][j] = data[i][j]
 
-        elif name.split('.')[1] == 'mat':
+        elif name_file.split('.')[1] == 'mat':
             self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
+            str_data = ''
+            for i in range(self.labels.shape[1]):
+                for j in range(self.labels.shape[0]):
+                    str_data += str(int(self.labels[j,i])) + delimiter
+                str_data = str_data[:-len(delimiter)] + '\n'
+
+            with open(name_file.split('.')[0] + ".txt", "w") as text_file:
+                text_file.write(str_data)
+
+            print("Txt file From Mat saved\n")
 
         else:
             print("File is neither a texte file nor a matlab file : the program do not know how to manage it")
@@ -287,7 +297,7 @@ def main(argv):
     nbPointList = arg_dict["nbPointList"]
     svgFileName = arg_dict["svgFileName"]
 
-    truth = Image(labelsFile, label0 = 0);
+    truth = Image(labelsFile);
     truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 1, svgFileName)
     print("Finished")
 

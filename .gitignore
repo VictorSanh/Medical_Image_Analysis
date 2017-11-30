@@ -38,6 +38,3 @@ cudaMultilabelOptimization/Outputs/segmentationMap/*
 
 cudaMultilabelOptimization/Outputs/u/*
 !cudaMultilabelOptimization/Outputs/u/.gitkeep
-
-cudaMultilabelOptimization/Outputs/RandomScribble/*
-!cudaMultilabelOptimization/Outputs/RandomScribble/.gitkeep

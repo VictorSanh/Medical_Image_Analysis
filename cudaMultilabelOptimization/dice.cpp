@@ -10,6 +10,7 @@ void diceScore(const CImg<float>& estimatedSegmentation, const CImg<float>& grou
     int nbRegions = groundTruth.max();
     std::cout << "Max Groundtruth : " << nbRegions << " Min GroundTruth : " << groundTruth.min() << std::endl;
     std::cout << "Max Estimated : " << estimatedSegmentation.max() << " Min Estimated : " << estimatedSegmentation.min() << std::endl;
+    std::cout <<groundTruth(0, 0) <<estimatedSegmentation(0,0) <<std::endl;
     
     int countGroundTruth[1+nbRegions] = {0};
     int countEstimatedSegmentation[1+nbRegions] = {0};

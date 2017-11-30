@@ -81,7 +81,7 @@ class Image:
         self.set_scribble1 = None
         self.rand_scribble = None
 
-        if name_file.split('.')[1] == 'txt':
+        if name_file.split('.')[-1] == 'txt':
             """ Extract a matrix containing the data of the text file
             Each line of the matrix corresponds to a line on the file
             Each element of a line are separated by "delimiter"
@@ -105,7 +105,7 @@ class Image:
                 for j in range(len(data[0])):
                     self.labels[i][j] = data[i][j]
 
-        elif name_file.split('.')[1] == 'mat':
+        elif name_file.split('.')[-1] == 'mat':
             self.labels = load_labels_from_Berkeley_dataset(name_file, segmentation_num)
 
 
@@ -118,14 +118,14 @@ class Image:
         elif (np.unique(self.labels) == [0, 1]).all() and self.label0 == 1:
             self.labels += 1
 
-        if name_file.split('.')[1] == 'mat':
+        if name_file.split('.')[-1] == 'mat':
             str_data = ''
-            for i in range(self.labels.shape[1]):
-                for j in range(self.labels.shape[0]):
-                    str_data += str(int(self.labels[j,i])) + delimiter
+            for i in range(self.labels.shape[0]):
+                for j in range(self.labels.shape[1]):
+                    str_data += str(int(self.labels[i, j])) + delimiter
                 str_data = str_data[:-len(delimiter)] + '\n'
 
-            with open(name_file.split('.')[0] + ".txt", "w") as text_file:
+            with open(name_file[:-4] + ".txt", "w") as text_file:
                 text_file.write(str_data)
 
             print("Txt file From Mat saved\n")
@@ -300,7 +300,7 @@ def main(argv):
     nbPointList = arg_dict["nbPointList"]
     svgFileName = arg_dict["svgFileName"]
 
-    truth = Image(labelsFile);
+    truth = Image(labelsFile, segmentation_num=2);
     truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 1, svgFileName)
     print("Finished")
 

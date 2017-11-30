@@ -281,8 +281,12 @@ int randomScribbleAnalysis()
     //CImg<float> *groundTruth = new CImg<float>("Inputs/RandomScribble/croco/groundTruth.cimg");
     //cout << "Ground Truth Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl;
     
+    //Strange Things    
     string groundTruthFileName = params.intputFolder + "groundTruth.txt";
+    //CImg<int> image = load_txt_to_cimg(groundTruthFileName.c_str());
+    //image.save((params.intputFolder + "groundTruth.cimg").c_str());
     CImg<float> *groundTruth = new CImg<float>(load_txt_to_cimg(groundTruthFileName.c_str()));
+    //CImg<float> *groundTruth = new CImg<float>((params.intputFolder + "groundTruth.cimg").c_str());
     cout << "Ground Truth Txt Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl <<endl <<endl;
     
     
@@ -312,7 +316,7 @@ int randomScribbleAnalysis()
 		id = id.substr(0, id.size()-4);
 		
 		save = (k%params.outputEveryNSteps)==0;
-		CImg<float> estimated = estimateSegmentation(scribbleMap, img, params, name + "_" + id + "_", save, false);
+		CImg<float> estimated = estimateSegmentation(groundTruth, img, params, name + "_" + id + "_", save, false);
 		
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);
@@ -349,7 +353,14 @@ int randomScribbleAnalysis()
 int main()
 {
     //int p = computeSegmentationFromParameterFile();
-    randomScribbleAnalysis();
+    //randomScribbleAnalysis();
+    //computeSegmentationFromParameterFile();
+    CImg<float> seg = CImg<float>("flowersU.cimg");
+    cout <<seg(0,0) <<endl;
+    cout <<seg(200,200) <<endl;
+    CImg<float> scr = CImg<float>("flowers.cimg");
+    cout <<scr(0,0) <<endl;
+    cout <<scr(200,200) <<endl;
     return 0;
 }
 

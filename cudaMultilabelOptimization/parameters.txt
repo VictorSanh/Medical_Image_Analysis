@@ -18,7 +18,7 @@
 
 
 imagefile		Inputs/flowers.jpg
-scribblefile		Inputs/flowers.cimg
+#scribblefile		Inputs/flowers.cimg
 resultsfolder		Outputs/
 
 
@@ -48,12 +48,12 @@ resultsfolder		Outputs/
 
 
 #sigma
-colorvariance				1.3
+colorvariance			1.3
 #alpha
 scribbledistancefactor		2
 
-brushsize					3
-brushdensity				1
+brushsize			3
+brushdensity			1
 
 
 
@@ -87,8 +87,8 @@ optimizationmethod		zach
 #lambda
 smoothnessweight		1
 
-numsteps				500
-debugoutput				true
+numsteps			500
+debugoutput			true
 outputeverynsteps		100
 
 

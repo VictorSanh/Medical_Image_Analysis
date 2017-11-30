@@ -17,8 +17,7 @@ cudaMultilabelOptimization/cudaMultilabelOptimization
 
 # INPUTS FOLDERS #
 ##################
-cudaMultilabelOptimization/Inputs/RandomScribble/croco/d*.txt
-
+cudaMultilabelOptimization/Inputs/RandomScribble/*/d*.txt
 
 # OUTPUTS FOLDERS #
 ###################

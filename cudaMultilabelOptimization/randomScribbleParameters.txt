@@ -1,13 +1,13 @@
 #### General program parameters
 
 
-imagefile 		Inputs/RandomScribble/girafe/girafe.jpg
-inputfolder		Inputs/RandomScribble/girafe/
-resultsfolder		Outputs/RandomScribble/girafe/
-groundTruthTxt		Inputs/RandomScribble/girafe/groundTruth.mat
+imagefile 		Inputs/RandomScribble/kangourou/kangourou.jpg
+inputfolder		Inputs/RandomScribble/kangourou/
+resultsfolder		Outputs/RandomScribble/kangourou/
+groundTruthTxt		Inputs/RandomScribble/kangourou/groundTruth.mat
 
 
-#### Parameters for spatially varying color Parzen dataterm 
+#### Parameters for spatially varying color Parzen dataterm
 
 
 #sigma
@@ -18,7 +18,7 @@ brushsize			3
 brushdensity			1
 
 
-#### Parameters for optimization methods 
+#### Parameters for optimization methods
 
 
 optimizationmethod		zach
@@ -27,4 +27,3 @@ smoothnessweight		100
 numsteps			500
 debugoutput			false
 outputeverynsteps		1
-

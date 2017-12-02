@@ -314,7 +314,7 @@ def main(argv):
     nbPointList = arg_dict["nbPointList"]
     svgFileName = arg_dict["svgFileName"]
 
-    truth = Image(labelsFile, segmentation_num = 2);
+    truth = Image(labelsFile, segmentation_num = 4);
     truth.generate_multi_scribbles_and_save(distanceList, nbPointList, 10, svgFileName)
     print("Finished")
 

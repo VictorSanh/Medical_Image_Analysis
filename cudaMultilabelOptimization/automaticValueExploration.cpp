@@ -3,6 +3,7 @@
 
 #include "CImg.h"
 #include "imageSegmentation.cpp"
+#include "segmentationManipulation.cpp"
 #include "dataterm.cpp"
 #include "params.h"
 #include <iostream>
@@ -24,8 +25,10 @@ int testValues()
     //read scribble file if indicated
     if(params.scribbleFile != "")
     {
-	scribbleMap = new CImg<float>(params.scribbleFile.c_str());
-	if(params.debugOutput) cout << "Loading scribble map" << endl;
+	if (params.scribbleFile.find(".txt") != std::string::npos)
+	    scribbleMap = new CImg<float>(load_txt_to_cimg(params.scribbleFile.c_str()));
+	else
+	    scribbleMap = new CImg<float>(params.scribbleFile.c_str());
 
 	if(scribbleMap->width() != img->width() || scribbleMap->height() != img->height())
 	{
@@ -46,9 +49,9 @@ int testValues()
     
     
     //Parameters to test
-    float colorVarianceList[1] = {1.3}; //sigma
-    float scribbleDistanceFactorList[16] = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 8, 10, 50, 100, 1000, 10000}; //alpha
-    float smoothnessWeightList[1] = {100}; //lambda
+    float colorVarianceList[7] = {0.5, 1.3, 2.0, 5.0, 10.0, 100.0, 1000.0}; //sigma
+    float scribbleDistanceFactorList[7] = {1, 3, 5, 10, 50, 100, 1000}; //alpha
+    float smoothnessWeightList[7] = {0.01, 0.1, 1, 10, 50, 100, 1000}; //lambda
     
     
     
@@ -73,7 +76,7 @@ int testValues()
 
 	    //OutputName Processing for more visibility
 	    string outputName = params.imageFile.substr(0, params.imageFile.size()-4);
-	    outputName = outputName.substr(outputName.find("/") + 1); 
+	    outputName = outputName.substr(outputName.find_last_of("/") + 1);
 	    
 	    int  edgeVar = 5;
 	    char outputParameters[255];

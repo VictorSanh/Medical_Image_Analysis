@@ -17,9 +17,9 @@
 ####
 
 
-imagefile		Inputs/flowers.jpg
-#scribblefile		Inputs/flowers.cimg
-resultsfolder		Outputs/
+imagefile		Inputs/Thresholding/hand1_.jpg
+scribblefile		Inputs/Thresholding/hand1_.txt
+resultsfolder		Outputs/Thresholding/
 
 
 

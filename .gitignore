@@ -44,5 +44,8 @@ cudaMultilabelOptimization/Outputs/u/*
 
 cudaMultilabelOptimization/Outputs/RandomScribble/*
 !cudaMultilabelOptimization/Outputs/RandomScribble/.gitkeep
-!cudaMultilabelOptimization/Outputs/RandomScribble/*/*.csv
-!cudaMultilabelOptimization/Outputs/RandomScribble/*/*.gitkeep
+!cudaMultilabelOptimization/Outputs/RandomScribble/*/diceScores.csv
+!cudaMultilabelOptimization/Outputs/RandomScribble/*/.gitkeep
+
+cudaMultilabelOptimization/Outputs/Thresholding/*
+!cudaMultilabelOptimization/Outputs/Thresholding/.gitkeep

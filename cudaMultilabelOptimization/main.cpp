@@ -127,7 +127,7 @@ int computeSegmentationFromParameterFile()
 
     //OutputName Processing for more visibility
     string outputName = params.imageFile.substr(0, params.imageFile.size()-4);
-    outputName = outputName.substr(outputName.find("/") + 1);
+    outputName = outputName.substr(outputName.find_last_of("/") + 1);
 
     int  edgeVar = 5;
     char outputParameters[255];
@@ -164,7 +164,7 @@ int computeSegmentationFromParameterFile()
 					&dataterm->dataEnergy,
 					params.resultsFolder,
 					outputNameWithParameters);
-	segmentation.segmentation.display();
+	//segmentation.segmentation.display();
     }
 
 
@@ -280,7 +280,7 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
     cout << "Image Loaded - Height: " << img->height() << " Width: " << img->width() <<endl;
 
 
-    //Read ground truth
+    //Read ground truth - STRANGE THINGS
     string groundTruthFileName = params.intputFolder + "groundTruth.txt";
     CImg<float> *groundTruth = new CImg<float>(transpose(load_txt_to_cimg(groundTruthFileName.c_str())));
     cout << "Ground Truth Txt Map Loaded - Height: " << groundTruth->height() << " Width: " << groundTruth->width() <<endl <<endl <<endl;
@@ -294,6 +294,7 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
     int k = 0;
     bool save = false;
     float avg = 0;
+    float sco = 0;
     string name = params.imageFile;
     name = name.substr(name.find_last_of("/")+1);
     name = name.substr(0, name.size()-4);
@@ -302,7 +303,7 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
     string csvFileName = params.resultsFolder + "diceScores.csv";
     ofstream csvDump;
     csvDump.open(csvFileName.c_str());
-    csvDump <<"ScribbleId" <<"," <<"AveraDiceScore" <<endl;
+    csvDump <<"ScribbleId" <<"," <<"AveraDiceScore" <<"," <<"Classe0" <<"," <<"Classe1" <<endl;
 
 
     bfs::path targetDir((params.intputFolder).c_str());
@@ -324,14 +325,20 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
 
 		std::list<float> scores(1+(*groundTruth).max());
 		diceScore(estimated, (*groundTruth), scores);
-		/*cout << "Dice Scores Details : "  <<endl;
-		for (list<float>::const_iterator it = scores.begin(); it != scores.end(); ++it)
-		    std::cout << *it << "\n";*/
+		cout << "Dice Scores Details : "  <<endl;
+
 		avg = averageDiceScore(scores);
 		cout << "Average Dice Score: " << avg <<endl;
 		k = k + 1;
 
-		csvDump <<(params, name + "_" + id) <<"," <<avg <<endl;
+		csvDump <<(params, name + "_" + id) <<"," <<avg;
+		for (list<float>::const_iterator it = scores.begin(); it != scores.end(); ++it){
+		    sco = *it;
+		    std::cout << sco << "\n";
+		    csvDump <<"," << sco;
+		}
+		csvDump <<endl;
+		
 	    }
     }
     csvDump.close();
@@ -360,8 +367,9 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
 int main()
 {
     //int p = computeSegmentationFromParameterFile();
-    randomScribbleAnalysis(true);
+    //randomScribbleAnalysis(true);
     //computeSegmentationFromParameterFile();
+    testValues();
     return 0;
 }
 

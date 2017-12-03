@@ -1,10 +1,10 @@
 #### General program parameters
 
 
-imagefile 		Inputs/RandomScribble/kangourou/kangourou.jpg
-inputfolder		Inputs/RandomScribble/kangourou/
-resultsfolder		Outputs/RandomScribble/kangourou/
-groundTruthTxt		Inputs/RandomScribble/kangourou/groundTruth.mat
+imagefile 		Inputs/RandomScribble/SC-HF-NI-04_IM0501/SC-HF-NI-04_IM0501.jpg
+inputfolder		Inputs/RandomScribble/SC-HF-NI-04_IM0501/
+resultsfolder		Outputs/RandomScribble/SC-HF-NI-04_IM0501/
+groundTruthTxt		Inputs/RandomScribble/SC-HF-NI-04_IM0501/groundTruth.txt
 
 
 #### Parameters for spatially varying color Parzen dataterm

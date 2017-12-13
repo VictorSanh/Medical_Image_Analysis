@@ -17,9 +17,9 @@
 ####
 
 
-imagefile		Inputs/Thresholding/hand1_.jpg
-scribblefile		Inputs/Thresholding/hand1_.txt
-resultsfolder		Outputs/Thresholding/
+imagefile		Inputs/lesion_cerveau.JPG
+#scribblefile		Inputs/hand1_.txt
+resultsfolder		Outputs/
 
 
 
@@ -48,9 +48,9 @@ resultsfolder		Outputs/Thresholding/
 
 
 #sigma
-colorvariance			1.3
+colorvariance			5
 #alpha
-scribbledistancefactor		2
+scribbledistancefactor		10
 
 brushsize			3
 brushdensity			1
@@ -85,7 +85,7 @@ brushdensity			1
 optimizationmethod		zach
 
 #lambda
-smoothnessweight		1
+smoothnessweight		500
 
 numsteps			500
 debugoutput			true

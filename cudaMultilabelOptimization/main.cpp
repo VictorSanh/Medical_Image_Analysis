@@ -366,10 +366,10 @@ int randomScribbleAnalysis(bool randomScribbleGeneration)
 
 int main()
 {
-    //int p = computeSegmentationFromParameterFile();
+    int p = computeSegmentationFromParameterFile();
     //randomScribbleAnalysis(true);
     //computeSegmentationFromParameterFile();
-    testValues();
+    //testValues();
     return 0;
 }
 
